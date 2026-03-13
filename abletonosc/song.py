@@ -100,7 +100,6 @@ class SongHandler(AbletonOSCHandler):
 
         def song_get_track_names(params):
             if len(params) == 0:
-                # No params: return all regular tracks + master + returns
                 track_names = [track.name for track in self.song.tracks]
                 track_names.append(self.song.master_track.name)
                 track_names.extend([rt.name for rt in self.song.return_tracks])
@@ -113,7 +112,6 @@ class SongHandler(AbletonOSCHandler):
                     track_names.extend([rt.name for rt in self.song.return_tracks])
                     return tuple(track_names)
                 else:
-                    # Explicit range: regular tracks only
                     return tuple(self.song.tracks[index].name for index in range(track_index_min, track_index_max))
         self.osc_server.add_handler("/live/song/get/track_names", song_get_track_names)
 
