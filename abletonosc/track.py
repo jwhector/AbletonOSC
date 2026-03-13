@@ -17,9 +17,10 @@ class TrackHandler(AbletonOSCHandler):
                     tracks_to_process.append((self.song.master_track, "master"))
                     tracks_to_process.extend([(rt, rt.name) for rt in self.song.return_tracks])
                 else:
-                    tracks_to_process = self._resolve_track(params[0])
-                    if tracks_to_process is None:
+                    resolved = self._resolve_track(params[0])
+                    if resolved is None:
                         return None
+                    tracks_to_process = [resolved]
                 
                 for track_obj, track_identifier in tracks_to_process:
                     if include_track_id:
