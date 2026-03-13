@@ -11,21 +11,24 @@ class TrackHandler(AbletonOSCHandler):
         def create_track_callback(func: Callable,
                                   *args,
                                   include_track_id: bool = False):
-            def track_callback(params: Tuple[Any]):
+            def track_callback(params: Tuple[Any]):                
                 if params[0] == "*":
-                    track_indices = list(range(len(self.song.tracks)))
+                    tracks_to_process = [(self.song.tracks[i], i) for i in range(len(self.song.tracks))]
+                    tracks_to_process.append((self.song.master_track, "master"))
+                    tracks_to_process.extend([(rt, rt.name) for rt in self.song.return_tracks])
                 else:
-                    track_indices = [int(params[0])]
-
-                for track_index in track_indices:
-                    track = self.song.tracks[track_index]
+                    result = self._resolve_track(params[0])
+                    if result is None:
+                        return None
+                
+                for track_obj, track_identifier in result:
                     if include_track_id:
-                        rv = func(track, *args, tuple([track_index] + params[1:]))
+                        rv = func(track_obj, *args, tuple([track_identifier] + params[1:]))
                     else:
-                        rv = func(track, *args, tuple(params[1:]))
-
+                        rv = func(track_obj, *args, tuple(params[1:]))
+                    
                     if rv is not None:
-                        return (track_index, *rv)
+                        return (track_identifier, *rv)
 
             return track_callback
 
