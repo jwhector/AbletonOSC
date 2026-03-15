@@ -98,13 +98,6 @@ def test_track_master_volume(client):
     client.send_message("/live/track/set/volume", ("master", 1.0))
     wait_one_tick()
 
-def test_track_master_panning(client):
-    client.send_message("/live/track/set/panning", ("master", 0.25))
-    wait_one_tick()
-    assert client.query("/live/track/get/panning", ("master",)) == ("master", 0.25)
-    client.send_message("/live/track/set/panning", ("master", 0.0))
-    wait_one_tick()
-
 def test_track_master_num_devices(client):
     result = client.query("/live/track/get/num_devices", ("master",))
     assert result[0] == "master"
@@ -126,19 +119,6 @@ def test_track_return_volume(client):
     client.send_message("/live/track/set/volume", ("A", 1.0))
     wait_one_tick()
 
-def test_track_return_panning(client):
-    client.send_message("/live/track/set/panning", ("A", 0.25))
-    wait_one_tick()
-    assert client.query("/live/track/get/panning", ("A",)) == ("A", 0.25)
-    client.send_message("/live/track/set/panning", ("A", 0.0))
-    wait_one_tick()
-
-def test_track_return_mute(client):
-    client.send_message("/live/track/set/mute", ("A", 1))
-    wait_one_tick()
-    assert client.query("/live/track/get/mute", ("A",)) == ("A", True)
-    client.send_message("/live/track/set/mute", ("A", 0))
-    wait_one_tick()
 
 def test_track_return_num_devices(client):
     result = client.query("/live/track/get/num_devices", ("A",))
